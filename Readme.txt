@@ -11,3 +11,46 @@ mvn spring-boot:run -Dprofile=cloud -Dspring-boot.run.profiles=prod
 
 package command:
 mvn package -Dprofile=cloud 
+
+
+
+
+
+
+-----
+<!--doar pentru GCP testing-->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<container>
+                     <jvmFlags>
+                         <jvmFlag>-Dspring-boot.run.profiles=prod</jvmFlag> // spring.run.profiles??
+                         </jvmFlags>  
+                    </container>
+				</configuration>
+			</plugin>
+
+mvn package -Dprofile=cloud  -DskipTests
+
+mvn compile jib:build -Dimage=gcr.io/$GOOGLE_CLOUD_PROJECT/giftcc:v1
+
+kubectl create deployment giftcc-deployment \
+  --image=gcr.io/$GOOGLE_CLOUD_PROJECT/giftcc:v1
+
+
+
+
+
+  FROM maven:3.6.3-jdk-11 AS build-env
+COPY ./pom.xml ./pom.xml
+RUN mvn dependency:go-offline -B
+COPY ./src ./src
+RUN mvn package
+
+FROM gcr.io/distroless/java:11
+COPY --from=build-env /target /app
+WORKDIR /app
+EXPOSE 8080
+CMD ["testapp-0.0.1-SNAPSHOT.jar"]
