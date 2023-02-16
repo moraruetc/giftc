@@ -26,7 +26,7 @@ mvn package -Dprofile=cloud
 				<configuration>
 					<container>
                      <jvmFlags>
-                         <jvmFlag>-Dspring.profiles.active=prod</jvmFlag> // spring.run.profiles?? -Dspring.profiles.active=prod pare sa mearga cu el???
+                         <jvmFlag>-Dspring.profiles.active=prod</jvmFlag> // spring.run.profiles
 						 <jvmFlag>-Dspring.config.location=classpath:/application.properties, classpath:/application-prod.properties</jvmFlag>
                     </jvmFlags>  
                     </container>
@@ -34,8 +34,7 @@ mvn package -Dprofile=cloud
 			</plugin>
 
 adauga si:
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver !!!! se pare ca trebuie
-spring.profiles.active=prod - merge fara el
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 mvn package -Dprofile=cloud  -DskipTests - nu e nevoie
 
