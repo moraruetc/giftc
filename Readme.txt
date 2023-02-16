@@ -26,24 +26,29 @@ mvn package -Dprofile=cloud
 				<configuration>
 					<container>
                      <jvmFlags>
-                         <jvmFlag>-Dspring-boot.run.profiles=prod</jvmFlag> // spring.run.profiles??
-                         </jvmFlags>  
+                         <jvmFlag>-Dspring.profiles.active=prod</jvmFlag> // spring.run.profiles?? -Dspring.profiles.active=prod pare sa mearga cu el???
+						 <jvmFlag>-Dspring.config.location=classpath:/application.properties, classpath:/application-prod.properties</jvmFlag>
+                    </jvmFlags>  
                     </container>
 				</configuration>
 			</plugin>
 
-mvn package -Dprofile=cloud  -DskipTests
+adauga si:
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver !!!! se pare ca trebuie
+spring.profiles.active=prod - merge fara el
 
-mvn compile jib:build -Dimage=gcr.io/$GOOGLE_CLOUD_PROJECT/giftcc:v1
+mvn package -Dprofile=cloud  -DskipTests - nu e nevoie
+
+mvn compile jib:build -Dimage=gcr.io/moro-1-373510/giftcc:v1 -Dprofile=cloud  |||  gcr.io/moro-1-373510/giftcc:v1
 
 kubectl create deployment giftcc-deployment \
-  --image=gcr.io/$GOOGLE_CLOUD_PROJECT/giftcc:v1
+  --image=gcr.io/moro-1-373510/giftcc:v1
 
 
+docker run --rm -p 8080:8080  gcr.io/moro-1-373510/giftcc:v1
 
 
-
-  FROM maven:3.6.3-jdk-11 AS build-env
+FROM maven:3.6.3-jdk-11 AS build-env
 COPY ./pom.xml ./pom.xml
 RUN mvn dependency:go-offline -B
 COPY ./src ./src

@@ -89,7 +89,12 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.3.1</version>
 				<configuration>
-					
+					<container>
+                     <jvmFlags>
+                         <jvmFlag>-Dspring.config.location=classpath:/application.properties, classpath:/application-prod.properties</jvmFlag>
+                         <jvmFlag>-Dspring.profiles.active=prod</jvmFlag>
+                         </jvmFlags>  
+                    </container>
 				</configuration>
 			</plugin>
 		</plugins>
